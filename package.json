@@ -1,0 +1,14 @@
+{
+  "name": "hackernews-node",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/vijaybaliah/hackernews-node.git",
+  "author": "Vijay B <vijaybalu.b@myntra.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "node ./src/index.js"
+  },
+  "dependencies": {
+    "graphql-yoga": "^1.17.4"
+  }
+}
