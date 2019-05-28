@@ -6,7 +6,7 @@
   "author": "Vijay B <vijaybalu.b@myntra.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node ./src/index.js"
+    "start": "prisma generate ./prisma && node ./src/index.js"
   },
   "dependencies": {
     "graphql-yoga": "^1.17.4"
