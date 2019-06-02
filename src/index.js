@@ -1,68 +1,34 @@
 const { GraphQLServer } = require('graphql-yoga')
 const typeDefs = './src/schema.graphql'
+const { prisma } = require('./generated/prisma-client')
 
-let links = [
-  {
-    id: 'link-0',
-    description: 'first link',
-    url: 'first'
-  }
-]
-
-const linkLength = links.length
 
 const resolvers = {
   Query: {
-    info: () => 'This is the API of a Hackernews Clone',
-    feed: () => links,
-    link: (parent, {id}) => {
-      const result = links.find(currentLink => currentLink.id === id)
-      return result
-    }
+    info: () => `This is the API of a Hackernews Clone`,
+    feed: (root, args, context, info) => {
+      return context.prisma.links()
+    },
   },
-
   Mutation: {
-    post: (parent, {description, url}) => {
-      const link = {
-        id: `link-${linkLength++}`,
-        description,
-        url
-      }
-      links.push(link)
-      return link
-    },
-    updateLink: (parent, {id, description, url}) => {
-      const result = links.find(currentLink => currentLink.id === id)
-      if (result) {
-        result['description'] = description
-        result['url'] = url
-      }
-      return result
-    },
-    deleteLink: (parent, {id}) => {
-      let result = null
-      const filteredResult = links.filter(currentLink => {
-        if (currentLink.id !== id) {
-          return currentLink
-        } else {
-          result = currentLink
-        }
+    post: (root, args, context) => {
+      return context.prisma.createLink({
+        url: args.url,
+        description: args.description,
       })
-      links = filteredResult
-      return result
-    }
+    },
+    deletePost: (root, args, context) => {
+      return context.prisma.deleteLink({
+        id: args.id
+      })
+    },
   },
-
-  Link: {
-    id: (parent) => parent.id,
-    description: (parent) => parent.description,
-    url: (parent) => parent.url
-  }
 }
 
 const server = new GraphQLServer({
   typeDefs,
-  resolvers
+  resolvers,
+  context: { prisma }
 })
 
 server.start(() => console.log('Server is running on http://localhost:4000'))
