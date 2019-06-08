@@ -1,7 +1,12 @@
 type Query {
   info: String!
-  feed: [Link!]!
+  feed(filter: String, first: Int, skip: Int, orderBy: LinkOrderByInput): Feed!
   link(id: ID!): Link
+}
+
+type Feed {
+  links: [Link!]!
+  count: Int!
 }
 
 type Mutation {
@@ -29,4 +34,13 @@ type User {
   name: String!
   email: String!
   links: [Link!]!
+}
+
+enum LinkOrderByInput {
+  description_ASC
+  description_DESC
+  url_ASC
+  url_DESC
+  createdAt_ASC
+  createdAt_DESC
 }
